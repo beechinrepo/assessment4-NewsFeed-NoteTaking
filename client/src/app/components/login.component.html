@@ -1,0 +1,50 @@
+<mat-card>
+  <mat-card-title>Login</mat-card-title>
+<mat-card-content>
+<form [formGroup]="form" (ngSubmit)="submit()">
+<p>
+  <mat-form-field>
+    <input type="text" matInput placeholder="Username" formControlName="username">
+  </mat-form-field>
+</p>
+
+<p>
+  <mat-form-field>
+    <input type="password" matInput placeholder="Password" formControlName="password">
+  </mat-form-field>
+</p>
+
+<div class="button">
+  <button [routerLink]="['/register']">register</button>
+  <button type="submit" mat-button>Login</button>
+</div>
+
+</form>
+</mat-card-content>
+</mat-card>
+
+<!-- <h1>Login</h1>
+
+<form #form="ngForm" (ngSubmit)="performLogin(form)">
+  <table>
+    <tr>
+      <td>Username:</td>
+      <td>
+        <input type="text" name="username" size="30" required ngModel>
+      </td>
+    <tr>
+      <td>Password:</td>
+      <td>
+        <input type="password" name="password" size="30" required ngModel>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <button type="submit" [disabled]="form.invalid">
+          Login
+        </button>
+      </td>
+    </tr>
+  </table>
+
+</form> -->

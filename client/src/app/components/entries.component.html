@@ -1,0 +1,17 @@
+<h1>Entries</h1>
+<mat-card class="example-card" *ngFor="let entry of entries" (click)="navigateToViewEntry(entry.entryId)">
+    <mat-card-header>
+        <!-- <div *ngIf = "entry.photo =='nothing'"><p>belloz</p></div> -->
+      <div *ngIf = "entry.photo !='nothing'" mat-card-avatar [ngStyle]="{'background-image': 'url(https://belloz.sgp1.digitaloceanspaces.com/myApp/'+ entry.photo +')'}" class="example-header-image"></div>
+      <mat-card-title class="title">{{entry.title}}</mat-card-title>
+      <mat-card-subtitle>{{entry.username}}</mat-card-subtitle>
+    </mat-card-header>
+    <!-- <mat-card-content>
+      <p>
+        {{entryDescription.entryDescription}}
+      </p>
+    </mat-card-content> -->
+  </mat-card>
+  <br>
+
+  <button routerLink="/search" mat-stroked-button>Back</button>

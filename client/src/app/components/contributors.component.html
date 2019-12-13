@@ -1,0 +1,66 @@
+<mat-toolbar class="toolbar" color="primary">
+    <button mat-button ><mat-icon>menu</mat-icon></button>
+    <span>GEEKS</span>  
+    <button mat-button [matMenuTriggerFor]="appMenu"><mat-icon>arrow_drop_down</mat-icon></button>
+</mat-toolbar>
+
+<mat-menu #appMenu="matMenu">
+    <button mat-menu-item routerLink="/home"> Newsfeed </button>
+    <button mat-menu-item routerLink="/search"> Notes </button>
+    <button mat-menu-item routerLink="/contributors"> Contributors </button>
+</mat-menu>
+
+<!-- <h3>Top Contributors</h3>
+<table mdbTable responsive="true">
+    <thead>
+      <tr>
+          <th>Contributor</th>
+          <th>No. of Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr mdbTableCol *ngFor="let item of count">
+        <th scope="row"></th>
+        <td>{{ item. username}}</td>
+        <td>{{ item.count }}</td>
+      </tr>
+    </tbody>
+  </table> -->
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Top Contributor</th>
+            <th>No. of Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr *ngFor="let item of count">
+                <td>{{ item. username}}</td>
+                <td>{{ item.count }}</td>
+            </tr>
+    </tbody>
+</table>
+
+<span class='line'>Make a contribution to support quality website content</span><br>
+<button (click)="openCheckout()" mat-stroked-button color="primary">Donate</button>
+&nbsp;
+<!-- 
+
+<div class="container">
+        <table class="responsive-table">
+          <caption>Top Contributors</caption>
+          <thead>
+            <tr>
+              <th scope="col">Contributor</th>
+              <th scope="col">No. of Entries</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of count">
+              <th scope="row">{{ item. username}}</th>
+              <td data-title="No. of Entries">{{ item.count }}</td>
+            </tr>
+        </tbody>
+    </table>
+  </div> -->

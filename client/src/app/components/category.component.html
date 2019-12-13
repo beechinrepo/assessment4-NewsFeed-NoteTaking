@@ -1,0 +1,58 @@
+<mat-card>
+    <mat-card-title>Add New Category</mat-card-title>
+    <mat-card-content>
+    <form #form="ngForm" (ngSubmit)="submit(form)">
+    <p>
+    <mat-form-field>
+        <input type="text" matInput placeholder="Category" name="category" ngModel required>
+    </mat-form-field>
+    </p>
+    
+    <!-- <label for="colorCode">Color Code</label>
+    <br> -->
+    <!-- <select name="colorCode" ngModel (change)="onChange($event.target.value)" [ngStyle]="{'background-color':selectedColor}">
+        <option *ngFor="let color of colors" [value]="color.value" [ngStyle]="{'background-color':color.value}"></option>
+    </select> -->
+
+    <select name="colorCode" ngModel (change)="onChange($event.target.value)" [ngStyle]="{'background-color':selectedColor}">
+    <option value="">Choose Color</option>
+    <option style="background-color: #FF850A;" value="orange"></option>
+    <option value="green" style="background-color:#00ff00;"></option>
+    <option value="blue" style="background-color: #0000ff;"></option>
+    <option value="yellow" style="background-color: #ffff00;"></option>
+    </select>
+    <br>
+
+    <!-- <mat-form-field>
+    <mat-label>Color Code</mat-label>
+    <mat-select name="colorCode" ngModel (change)="onChange($event.target.value)" [ngStyle]="{'background-color':selectedColor}">
+            <mat-option style="background-color: #FF850A;" value="orange"></mat-option>
+            <mat-option value="green" style="background-color:#00ff00;"></mat-option>
+            <mat-option value="blue" style="background-color: #0000ff;"></mat-option>
+            <mat-option value="yellow" style="background-color: #ffff00;"></mat-option>
+    </mat-select>
+    </mat-form-field>
+    <br> -->
+
+      
+    <!-- <mat-form-field>
+        <mat-label>Photo</mat-label>
+        <input type="file" matInput placeholder="photo" name="photo" id="photo" #imageFile accept="image/*" ngModel>
+    </mat-form-field>
+    <br> -->
+
+    <br>
+    <input type="file" placeholder="photo" name="photo" id="photo" #imageFile accept="image/*" ngModel>
+    <br><br>
+
+    <div class="button">
+        <button type="submit" [disabled]="form.invalid" mat-stroked-button color="primary">Add Category</button>
+    </div>
+
+    <!-- <div class="button">
+    <button type="submit" mat-button [disabled]="form.invalid">Add Category</button>
+    </div> -->
+    
+    </form>
+    </mat-card-content>
+</mat-card>
