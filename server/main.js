@@ -21,7 +21,7 @@ if (fs.existsSync(__dirname + '/config(full).js')) {
 		 ca: fs.readFileSync(config.mysql.cacert)
 	};
 } else {
-	console.info('using env');
+	// console.info('using env');
 	config = {
         mysql: {
             host: process.env.DB_HOST,
@@ -155,7 +155,7 @@ app.get('/api/home',
         conns.mongodb.db('myApp').collection('jwt_tokens').find({jwt:tokenStr})
             .toArray()
             .then(result => {
-                console.info('found token')
+                // console.info('found token')
                 if (result.length) {
                     req.jwt = result[0].token;
                     return next()
@@ -347,8 +347,8 @@ app.get('/api/newsArticleById', (req, resp) => {
 app.post('/api/user', fileUpload.single('photo'),
     (req, resp, next) => {
         // input type=<not file>
-        console.info('req.body: ', req.body);
-        console.info('req.file: ', req.file);
+        // console.info('req.body: ', req.body);
+        // console.info('req.file: ', req.file);
         
         conns.mysql.getConnection(
             (err, conn) => {
@@ -366,7 +366,7 @@ app.post('/api/user', fileUpload.single('photo'),
                                 req.body.email,
                                 req.file.filename
                             ]
-                            console.info('sql insert_user params: ', params);
+                            // console.info('sql insert_user params: ', params);
                             return (insertUser({connection:status.connection, params: params}));
                         }
                         else {
@@ -376,7 +376,7 @@ app.post('/api/user', fileUpload.single('photo'),
                                 req.body.email,
                                 'nothing'
                             ]
-                            console.info('sql insert_user params: ', params);
+                            // console.info('sql insert_user params: ', params);
                             return (insertUser({connection:status.connection, params: params}));
                         }
                     }
@@ -415,7 +415,7 @@ app.post('/api/user', fileUpload.single('photo'),
                         return new Promise(
                             (resolve, reject) =>{
                                 if (typeof(req.file) !== 'undefined') {
-                                    console.log('file ...');    
+                                    // console.info('file ...');    
                                     fs.unlink(req.file.path, () =>{
                                         resp.status(201);
                                         resp.format({ 	
@@ -432,7 +432,7 @@ app.post('/api/user', fileUpload.single('photo'),
                                         resolve;
                                     })
                                 } 
-                                console.log('file ...3')
+                                // console.info('file ...3')
                             }
                         )
                     },
@@ -450,8 +450,8 @@ app.post('/api/user', fileUpload.single('photo'),
 // add Category
 app.post('/api/category', fileUpload.single('photo'),
    (req,resp)=>{  
-           console.info('req.body: ', req.body);
-           console.info('req.file: ', req.file);
+        //    console.info('req.body: ', req.body);
+        //    console.info('req.file: ', req.file);
            conns.mysql.getConnection(
             (err, conn) => {
                 if (err){
@@ -468,7 +468,7 @@ app.post('/api/category', fileUpload.single('photo'),
                                 req.body.colorCode,
                                 req.file.filename
                             ]
-                            console.info('sql insert_category params: ', params);
+                            // console.info('sql insert_category params: ', params);
                             return (insertCategory({connection:status.connection, params: params}));
                         }
                         else {
@@ -478,7 +478,7 @@ app.post('/api/category', fileUpload.single('photo'),
                             req.body.colorCode,
                             'nothing'
                             ]
-                            console.info('sql insert_category params: ', params);
+                            // console.info('sql insert_category params: ', params);
                             return (insertCategory({connection:status.connection, params: params}));
                         }
                     }
@@ -522,19 +522,19 @@ app.post('/api/category', fileUpload.single('photo'),
                                         resp.status(201);
                                         resp.format({ 	
                                             'application/json': ()=>{
-                                                console.log("returning json");
+                                                // console.info("returning json");
                                                 resp.json({added_category: req.body.category});
                                                 
                                             }, 				
                                             'text/html': ()=>{
-                                                console.log("returning html");
+                                                // console.info("returning html");
                                                 resp.type('text/plain').send(`added_category: ${req.body.category}`);
                                             }
                                         })
                                         resolve;
                                     })
                                 } 
-                                console.log('file ...3')
+                                // console.info('file ...3')
                             }
                         )
                     },
@@ -566,8 +566,8 @@ app.get('/api/category',
 app.post('/api/entry', fileUpload.single('photo'),
     (req, resp, next) => {
         // input type=<not file>
-        console.info('req.body: ', req.body);
-        console.info('req.file: ', req.file);
+        // console.info('req.body: ', req.body);
+        // console.info('req.file: ', req.file);
         conns.mysql.getConnection(
             (err, conn) => {
                 if (err){
@@ -580,13 +580,13 @@ app.post('/api/entry', fileUpload.single('photo'),
                         const params = [
                             req.body.category
                         ]
-                        console.info('find catId')
+                        // console.info('find catId')
                         return (findCatId({connection:status.connection, params: params}));
                     }
                 )
                 .then(
                     status => {
-                        console.info('file...');
+                        // console.info('file...');
                         if (typeof(req.file) == 'undefined') {
                             const params = [
                                 'nothing',
@@ -594,7 +594,7 @@ app.post('/api/entry', fileUpload.single('photo'),
                                 status.result[0].catId,
                                 req.body.username 
                             ]
-                            console.info('sql params: ', params);
+                            // console.info('sql params: ', params);
                             return (insertEntry({connection:status.connection, params: params}));
                         }
                         else {
@@ -604,14 +604,14 @@ app.post('/api/entry', fileUpload.single('photo'),
                                 status.result[0].catId,
                                 req.body.username 
                             ]
-                            console.info('sql params: ', params);
+                            // console.info('sql params: ', params);
                             return (insertEntry({connection:status.connection, params: params}));
                         }
                     }
                 )
                 .then(
                     status => {
-                        console.info(`mongo inserts: ${status.result.insertId} ${req.body.description}`);
+                        // console.info(`mongo inserts: ${status.result.insertId} ${req.body.description}`);
                         conns.mongodb.db('myApp').collection('entryDescription')
                             .insertOne({
                                 entryId: status.result.insertId, 
@@ -629,7 +629,7 @@ app.post('/api/entry', fileUpload.single('photo'),
                             if (err) {
                                 return resp.status(400).type('application/json').json({ error })
                             }
-                            console.log('file ...')
+                            // console.info('file ...')
                             fs.readFile(req.file.path,(err, imgFile) => {
                                 if (err)
                                     return reject({connection: status.connection, error: err})
@@ -654,24 +654,24 @@ app.post('/api/entry', fileUpload.single('photo'),
                         return new Promise(
                             (resolve, reject) =>{
                                 if (typeof(req.file) !== 'undefined') {
-                                    console.log('file ...');    
+                                    // console.info('file ...');    
                                     fs.unlink(req.file.path, () =>{
                                         resp.status(201);
                                         resp.format({ 	
                                             'application/json': ()=>{
-                                                console.log("returning json");
+                                                // console.info("returning json");
                                                 resp.json({added_category: req.body.category});
                                                 
                                             }, 				
                                             'text/html': ()=>{
-                                                console.log("returning html");
+                                                // console.info("returning html");
                                                 resp.type('text/plain').send(`added_category: ${req.body.category}`);
                                             }
                                         })
                                         resolve;
                                     })
                                 } 
-                                console.log('file ...3')
+                                // console.info('file ...3')
                             }
                         )
                     },
@@ -697,7 +697,7 @@ app.get('/api/entries/:category',
             .then(results => {
                 const r0 = results[0];
                 const r1 = results[1];
-                console.info('>r1 = ', r1);
+                // console.info('>r1 = ', r1);
                 const filtered = r1.map(v => {
                     const filter = {
                         entryId: v.entryId,
@@ -734,7 +734,7 @@ app.get('/api/entry/:entryId',
                 const r0 = results[0];
                 const r1 = results[1];
                 const r2 = results[2];
-                console.info('>r1 = ', r1);
+                // console.info('>r1 = ', r1);
                 const filtered = r0.map(v => {
                     const filter = {
                         entryId: v.entryId,
@@ -767,9 +767,9 @@ app.get('/api/entry/:entryId',
 // edit Entry
 app.put('/api/entry/:entryId/edit', fileUpload.single('photo'),
     (req, resp) => {
-        console.info('request body:', req.body);
-        console.info('request params:', req.params);
-        console.info('request file:', req.file);
+        // console.info('request body:', req.body);
+        // console.info('request params:', req.params);
+        // console.info('request file:', req.file);
         conns.mysql.getConnection(
             (err, conn) => {
                 if (err){
@@ -786,7 +786,7 @@ app.put('/api/entry/:entryId/edit', fileUpload.single('photo'),
                 )
                 .then(
                     status => {
-                        console.info('file...');
+                        // console.info('file...');
                         if (typeof(req.file) == 'undefined') {
                             const params = [
                                 'nothing',  
@@ -795,7 +795,7 @@ app.put('/api/entry/:entryId/edit', fileUpload.single('photo'),
                                 req.body.username,
                                 req.params.entryId 
                             ]
-                            console.info('sql params: ', params);
+                            // console.info('sql params: ', params);
                             return (updateEntryByEntryId({connection:status.connection, params: params}));
                         }
                         else {
@@ -806,14 +806,14 @@ app.put('/api/entry/:entryId/edit', fileUpload.single('photo'),
                                 req.body.username,
                                 req.params.entryId 
                             ]
-                            console.info('sql params: ', params);
+                            // console.info('sql params: ', params);
                             return (updateEntryByEntryId({connection:status.connection, params: params}));
                         }
                     }
                 )
                 .then(
                     status => {
-                        console.info(`mongo inserts: ${status.result.insertId} ${req.body.description}`);
+                        // console.info(`mongo inserts: ${status.result.insertId} ${req.body.description}`);
                         const id = parseInt(req.params.entryId);
                         conns.mongodb.db('myApp').collection('entryDescription')
                             .updateOne(
@@ -834,7 +834,7 @@ app.put('/api/entry/:entryId/edit', fileUpload.single('photo'),
                             if (err) {
                                 return resp.status(400).type('application/json').json({ error })
                             }
-                            console.log('file ...')
+                            // console.info('file ...')
                             fs.readFile(req.file.path,(err, imgFile) => {
                                 if (err)
                                     return reject({connection: status.connection, error: err})
@@ -859,24 +859,24 @@ app.put('/api/entry/:entryId/edit', fileUpload.single('photo'),
                         return new Promise(
                             (resolve, reject) =>{
                                 if (typeof(req.file) !== 'undefined') {
-                                    console.log('file ...');    
+                                    // console.info('file ...');    
                                     fs.unlink(req.file.path, () =>{
                                         resp.status(201);
                                         resp.format({ 	
                                             'application/json': ()=>{
-                                                console.log("returning json");
+                                                // console.info("returning json");
                                                 resp.json({added_category: req.body.category});
                                                 
                                             }, 				
                                             'text/html': ()=>{
-                                                console.log("returning html");
+                                                // console.info("returning html");
                                                 resp.type('text/plain').send(`added_category: ${req.body.category}`);
                                             }
                                         })
                                         resolve;
                                     })
                                 } 
-                                console.log('file ...3')
+                                // console.info('file ...3')
                             }
                         )
                     },
@@ -895,8 +895,8 @@ app.put('/api/entry/:entryId/edit', fileUpload.single('photo'),
 // delete Entry
 app.post('/api/entry/:entryId/delete', fileUpload.single('photo'),
     (req, resp) => {
-        console.info('request body:', req.body);
-        console.info('request params:', req.params);
+        // console.info('request body:', req.body);
+        // console.info('request params:', req.params);
         conns.mysql.getConnection(
             (err, conn) => {
                 if (err){
@@ -919,13 +919,13 @@ app.post('/api/entry/:entryId/delete', fileUpload.single('photo'),
                             status.result[0].catId,
                             req.body.username 
                         ]
-                        console.info('sql insert deleted_entry params: ', params);
+                        // console.info('sql insert deleted_entry params: ', params);
                         return (insertDeletedEntry({connection:status.connection, params: params}));
                     }
                 )
                 .then(
                     status => {
-                        console.info(`mongo inserts deleted_entry: ${status.result.insertId} ${req.body.description}`);
+                        // console.info(`mongo inserts deleted_entry: ${status.result.insertId} ${req.body.description}`);
                         conns.mongodb.db('myApp').collection('deleted_entryDescription')
                             .insertOne({
                                 entryId: status.result.insertId, 
@@ -939,7 +939,7 @@ app.post('/api/entry/:entryId/delete', fileUpload.single('photo'),
                         const params = [
                             req.params.entryId
                         ]
-                        console.info('sql delete params: ', params);
+                        // console.info('sql delete params: ', params);
                         return (deleteEntry({connection:status.connection, params: params}));
                     }
                 )
@@ -950,7 +950,7 @@ app.post('/api/entry/:entryId/delete', fileUpload.single('photo'),
                             .deleteOne({
                                 entryId: id
                             })  
-                            console.info(`mongo delete: ${req.params.entryId}`);
+                            // console.info(`mongo delete: ${req.params.entryId}`);
                             return ({connection:status.connection});   
                     }
                 )

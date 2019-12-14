@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1576318997186,
+  "timestamp": 1576338767343,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -10,8 +10,8 @@
       "urls": [
         "/favicon.ico",
         "/index.html",
-        "/main-es2015.ab6c2fa56e2a85f09201.js",
-        "/main-es5.ab6c2fa56e2a85f09201.js",
+        "/main-es2015.b4f7dcbea0233bff4b10.js",
+        "/main-es5.b4f7dcbea0233bff4b10.js",
         "/polyfills-es2015.2987770fde9daa1d8a2e.js",
         "/polyfills-es5.6696c533341b95a3d617.js",
         "/runtime-es2015.edb2fcf2778e7bf1d426.js",
@@ -326,9 +326,9 @@
     "/assets/images/xinhua-net.png": "d76ba4960d78f4323a7b0afa99d2710c4584bbdd",
     "/assets/images/ynet.png": "69155300e78e146b9554f28f7d25b8f7d7eb740a",
     "/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
-    "/index.html": "5f8ecdfca8580b223be98e63e84f361b27e4e663",
-    "/main-es2015.ab6c2fa56e2a85f09201.js": "bb180dc2f9c38dc20eff69998f7f884eae3b2c3d",
-    "/main-es5.ab6c2fa56e2a85f09201.js": "0733476b32b8049896cdf245f3f61adee6dd3666",
+    "/index.html": "2667c9a29637cdaa5ae24afa74e6d061f3507ccf",
+    "/main-es2015.b4f7dcbea0233bff4b10.js": "24d40662c4d5d3d268feb6169cf69f0c5982b885",
+    "/main-es5.b4f7dcbea0233bff4b10.js": "a3cc6c2f1fed5eea7e6be1777eb6f5cb1c9325c3",
     "/polyfills-es2015.2987770fde9daa1d8a2e.js": "cf5cbfa9134716054fb479ab21362146cdf1f2ff",
     "/polyfills-es5.6696c533341b95a3d617.js": "9ceb13edd4b10268f661814868dadb2b284f9745",
     "/runtime-es2015.edb2fcf2778e7bf1d426.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",

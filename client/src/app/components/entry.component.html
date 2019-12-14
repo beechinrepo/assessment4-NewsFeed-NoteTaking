@@ -1,12 +1,9 @@
 <mat-card>
     <mat-card-content>
         <form [formGroup]="form">
-
-            
-                <span>Entry</span>&nbsp;
-                <facebook-share-button [share]="shareObj" ></facebook-share-button><br><hr>
-            <br>
-            
+            <span>Entry</span>&nbsp;
+            <facebook-share-button [share]="shareObj" ></facebook-share-button><br><hr><br>
+    
             <mat-form-field style="width:100% !important">
                 <input type="text" matInput placeholder="Title" formControlName="title">
             </mat-form-field>
@@ -35,7 +32,6 @@
                 <button (click)="onEdit()" mat-stroked-button color="accent">Edit</button>&nbsp;
                 <button routerLink="/search" mat-stroked-button>Back</button>&nbsp; 
             </div>
-
         </form>
     </mat-card-content>
 </mat-card>

@@ -1,13 +1,18 @@
-<mat-toolbar class="toolbar" color="primary">
+ <mat-toolbar class="toolbar" color="primary">
     <button mat-button (click)="update()" (click)="sidenav.open()">
-        <mat-icon>menu</mat-icon>
+      <mat-icon>menu</mat-icon>
     </button>
-    <span>GEEKS</span>  
+    
+    <div class="nav">
+      <span><img src = "../assets/images/GEEKS.jpg" class="logo"></span> 
+      <span> GEEKS</span>
+    </div>
+      
     <button mat-button [matMenuTriggerFor]="appMenu">
-        <mat-icon>arrow_drop_down</mat-icon>
+      <mat-icon>arrow_drop_down</mat-icon>
     </button>
 </mat-toolbar>
-    
+
 <mat-menu #appMenu="matMenu">
     <button mat-menu-item routerLink="/home"> Newsfeed </button>
     <button mat-menu-item routerLink="/search"> Notes </button>

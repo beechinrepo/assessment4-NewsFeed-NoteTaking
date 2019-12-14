@@ -1,11 +1,16 @@
 <mat-toolbar class="toolbar" color="primary">
-    <button mat-button>
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span>GEEKS</span>  
-    <button mat-button [matMenuTriggerFor]="appMenu"
-      ><mat-icon>arrow_drop_down</mat-icon>
-    </button>
+  <button mat-button >
+    <mat-icon></mat-icon>
+  </button>
+  
+  <div class="nav">
+    <span><img src = "../assets/images/GEEKS.jpg" class="logo"></span> 
+    <span> GEEKS</span>
+  </div>
+    
+  <button mat-button [matMenuTriggerFor]="appMenu">
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
 </mat-toolbar>
 
 <mat-menu #appMenu="matMenu">

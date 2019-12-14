@@ -2,8 +2,25 @@
     padding: 20px;
 }
 
+.nav {
+    align-content: center;
+}
+
+.logo {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    padding-top: 10px;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+  }
+  
 span {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    vertical-align: middle;
 }
 
 .btn {

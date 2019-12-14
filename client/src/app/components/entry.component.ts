@@ -4,7 +4,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { SocialService } from 'ngx-social-button';
-import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-entry',
@@ -28,16 +27,8 @@ export class EntryComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               private http: HttpClient,
-              private socialAuthService: SocialService,
-              private meta: Meta) {
+              private socialAuthService: SocialService) {
                 this.form = this.createFormGroup();
-                this.meta.addTag({ property: 'og:url', content: 'https://sleepy-ridge-60880' });
-                this.meta.addTag({ property: 'og:type', content: 'article' });
-                this.meta.addTag({ property: 'og:title', content: 'GEEKS share' });
-                this.meta.addTag({ property: 'og:url', content: 'https://sleepy-ridge-60880' });
-                this.meta.addTag({ property: 'og:description', content: 'Best Article Ever' });
-                this.meta.addTag({ property: 'og:image', content: 'https://cdn.dribbble.com/users/71890/screenshots/2267188/tech_geek_logo.jpg' });
-                this.meta.addTag({ property: 'fb:app_id', content: '441224926819771' });
             }
 
   ngOnInit() {
