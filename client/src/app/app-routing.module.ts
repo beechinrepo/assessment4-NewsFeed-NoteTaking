@@ -17,17 +17,15 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'home', component: HomeComponent,
-      // route guard has to be a service
-      canActivate: [ myAppService ]
+    canActivate: [ myAppService ]
   },
   { path: 'category', component: CategoryComponent,
-      canActivate: [ myAppService ]
+    canActivate: [ myAppService ]
   },
   { path: 'search', component: SearchComponent,
     canActivate: [ myAppService ]
   },
-  { path: 'entry/:entryId', component: EntryComponent,
-    canActivate: [ myAppService ]
+  { path: 'entry/:entryId', component: EntryComponent
   },
   { path: 'entries/:category', component: EntriesComponent,
     canActivate: [ myAppService ]

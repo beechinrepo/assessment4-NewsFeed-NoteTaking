@@ -25,20 +25,3 @@ export class RegisterComponent implements OnInit {
       .catch(error => console.error(error));
   }
 }
-
-// const val = form.value;
-//     const user: USER = {
-//       username: val.username,
-//       password: val.password,
-//       email: val.email,
-//       avatar: val.photo
-//     }
-//     console.info('new user details: ', user);
-//     this.mySvc.addUser(user).then(response => {
-//         if (response != null) {
-//           this.router.navigate(['/login']);
-//         } else {
-//           console.log('error');
-//         }
-//       });
-//   }

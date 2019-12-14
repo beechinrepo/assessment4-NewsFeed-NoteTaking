@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { myAppService } from '../myApp.service';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { SocialService } from 'ngx-social-button';
+import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-entry',
@@ -11,28 +13,36 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 })
 export class EntryComponent implements OnInit {
   form: FormGroup;
-  categories: [];
+  public categories: [];
   entryDescription: [];
   entryInfo: [];
   category: [];
   photo: string;
 
+  shareObj = {
+    href: '',
+    hastag: '#news'
+  };
+
   constructor(private mySvc: myAppService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private http: HttpClient) {
-    this.form = this.createFormGroup();
-  }
+              private route: ActivatedRoute,
+              private router: Router,
+              private http: HttpClient,
+              private socialAuthService: SocialService,
+              private meta: Meta) {
+                this.form = this.createFormGroup();
+                this.meta.addTag({ property: 'og:url', content: 'https://sleepy-ridge-60880' });
+                this.meta.addTag({ property: 'og:type', content: 'article' });
+                this.meta.addTag({ property: 'og:title', content: 'GEEKS share' });
+                this.meta.addTag({ property: 'og:url', content: 'https://sleepy-ridge-60880' });
+                this.meta.addTag({ property: 'og:description', content: 'Best Article Ever' });
+                this.meta.addTag({ property: 'og:image', content: 'https://cdn.dribbble.com/users/71890/screenshots/2267188/tech_geek_logo.jpg' });
+                this.meta.addTag({ property: 'fb:app_id', content: '441224926819771' });
+            }
 
   ngOnInit() {
     this.mySvc.getCategory()
-      .then(result => {
-        this.categories = result.result;
-        console.info('entry categories: ', this.categories);
-      })
-      .catch(error => {
-        console.info('error: ', error);
-      });
+    .subscribe(data => this.categories = data['result']);
 
     const selectedId = this.route.snapshot.paramMap.get('entryId');
     this.mySvc.getEntry(selectedId).then(response => {
@@ -110,22 +120,5 @@ export class EntryComponent implements OnInit {
         (error) => console.info(error)
       );
   }
+
 }
-// client ID: 998770374995-ptvb1v1gsl0jn42be3afmusvrgguahco.apps.googleusercontent.com
-// client secret: 1ngPDSB0Sk8PfWvvi1rpihrn
-
-// ngOnInit() {
-//   const selectedId = this.route.snapshot.paramMap.get('entryId');
-//   this.mySvc.getEntry(selectedId)
-//     .then(response => {
-
-//       this.entryDescription = response['entryDescription'][0];
-//       this.entryInfo = response['entryInfo'][0];
-//       // console.info(response);
-//       console.info('entry description: ', this.entryDescription);
-//       console.info('entry info: ', this.entryInfo);
-//     })
-//     .catch(error => {
-//       console.info('error: ', error);
-//     });
-// }

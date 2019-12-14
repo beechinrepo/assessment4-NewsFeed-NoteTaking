@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { myAppService } from '../myApp.service';
 import { Router } from '@angular/router';
 
@@ -15,7 +14,9 @@ export class LoginComponent implements OnInit {
     password: new FormControl(''),
   });
 
-  constructor(private mySvc: myAppService, private router: Router, private formBuilder: FormBuilder) { }
+  constructor(private mySvc: myAppService,
+              private router: Router,
+              private formBuilder: FormBuilder) { }
 
   ngOnInit() {
   }
@@ -29,12 +30,3 @@ export class LoginComponent implements OnInit {
       });
   }
 }
-
-// performLogin(form: NgForm) {
-//   console.info('> ', form.value);
-//   this.mySvc.authenticate(form.value['username'], form.value['password'])
-//     .then(result => {
-//       console.log('authenticated: ', result);
-//       this.router.navigate(['/home']);
-//     });
-// }

@@ -1,78 +1,52 @@
 <mat-toolbar class="toolbar" color="primary">
-        <button mat-button (click)="sidenav.open()" ><mat-icon>menu</mat-icon></button>
-        <span>GEEKS</span>  
-        <button mat-button [matMenuTriggerFor]="appMenu"><mat-icon>arrow_drop_down</mat-icon></button>
-    </mat-toolbar>
+    <button mat-button (click)="update()" (click)="sidenav.open()">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span>GEEKS</span>  
+    <button mat-button [matMenuTriggerFor]="appMenu">
+        <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+</mat-toolbar>
     
-    <mat-menu #appMenu="matMenu">
-        <button mat-menu-item routerLink="/home"> Newsfeed </button>
-        <button mat-menu-item routerLink="/search"> Notes </button>
-        <button mat-menu-item routerLink="/contributors"> Contributors </button>
-    </mat-menu>
+<mat-menu #appMenu="matMenu">
+    <button mat-menu-item routerLink="/home"> Newsfeed </button>
+    <button mat-menu-item routerLink="/search"> Notes </button>
+    <button mat-menu-item routerLink="/contributors"> Contributors </button>
+</mat-menu>
       
 <mat-sidenav-container class="example-container">
+
     <mat-sidenav #sidenav class="example-sidenav">
         <mat-list class="list-nav">
             <mat-list-item class="list-item" *ngFor="let item of categories" (click)="navigateToCategoryEntries(item.category);sidenav.close();">
-    
             <div *ngIf = "item.photo !='nothing'" mat-card-avatar [ngStyle]="{'background-image': 'url(https://belloz.sgp1.digitaloceanspaces.com/myApp/'+ item.photo +')'}" class="example-header-image"></div>
-            
             <span class="source-name"> {{item.category}}</span>
-    
             </mat-list-item>
         </mat-list>
         <button mat-stroked-button style="margin:5px;" color="primary" (click)="navigateToAddEntry()"><mat-icon>add</mat-icon>Entry</button>
-        
         <button mat-stroked-button style="margin:5px;" color="accent" (click)="openBottomSheet()"><mat-icon>add</mat-icon>Category</button>
-        <!-- <button (click)="navigateToAddEntry()"><mat-icon>add</mat-icon>Entry</button>
-        <button (click)="openBottomSheet()"><mat-icon>add</mat-icon>Category</button> -->
     </mat-sidenav>
-
 
     <form #form="ngForm" (ngSubmit)="processForm(form)" fxLayout="column row" fxLayoutGap="20px">
         <mat-form-field class="searchbar">
-            <input matInput type="text" name="term" id="term"
-                placeholder="What do you want to search?" required
+            <input matInput type="text" name="term" id="term" placeholder="What do you want to search?" required
                 ngModel #searchField="ngModel">
             <mat-hint *ngIf="searchField.invalid && form.dirty">
                 Please tell me what you want to find.
             </mat-hint>
         </mat-form-field>
 
-        <!-- <mat-form-field>
-            <input matInput type="number" name="limit" id="limit"
-            placeholder="limit"
-            ngModel #limitField="ngModel">
-        </mat-form-field>
-
-        <mat-form-field>
-            <input matInput type="number" name="offset" id="offset"
-            placeholder="offset"
-            ngModel #offsetField="ngModel">
-        </mat-form-field> -->
-
         <button class= "btn" mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
-        <mat-icon>search</mat-icon>
-        Search It!
+            <mat-icon>search</mat-icon>Search It!
         </button>
     </form><br>
 
     <div class="col" *ngFor="let entry of search">
         <mat-card class="example-card mt-2" (click)="navigateToViewEntry(entry.entryId)">
             <mat-card-header>
-              <mat-card-title> {{entry.entryDescription}} </mat-card-title>
+                <mat-card-title> {{entry.entryDescription}} </mat-card-title>
             </mat-card-header>
-          </mat-card>
+        </mat-card>
     </div>
 
 </mat-sidenav-container>
-
-
-<!-- public photo: string,
-public category: string,
-public title: string,
-public description: string,
-public username: string,
-public creation?: string,
-public entryId?: string
- -->

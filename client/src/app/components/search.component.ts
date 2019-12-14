@@ -4,7 +4,6 @@ import { myAppService } from '../myApp.service';
 import { Router } from '@angular/router';
 import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import { CategoryComponent } from './category.component';
-import { Pipe, PipeTransform } from '@angular/core';
 
 export interface LIMIT {
   value: string;
@@ -25,7 +24,7 @@ export class SearchComponent implements OnInit {
     {value: '15', viewValue: '15'}
   ];
 
-  categories: [];
+  public categories: [];
   entries: [];
   search: [];
 
@@ -34,17 +33,11 @@ export class SearchComponent implements OnInit {
 
   constructor(private mySvc: myAppService,
               private router: Router,
-              private bottomSheet: MatBottomSheet) { }
+              private bottomSheet: MatBottomSheet) {}
 
   ngOnInit() {
     this.mySvc.getCategory()
-    .then(result => {
-      this.categories =  result.result;
-      console.info('entry categories: ', this.categories);
-    })
-    .catch(error => {
-      console.info('error: ', error);
-    });
+    .subscribe(data => this.categories = data['result']);
   }
 
   getEntries(category: string) {
@@ -73,6 +66,11 @@ export class SearchComponent implements OnInit {
     this.router.navigate(['/add']);
   }
  
+  update() {
+    this.mySvc.getCategory()
+    .subscribe(data => this.categories = data['result']);
+  }
+  
   processForm(form: NgForm) {
     console.info('form values: ', form.value);
     const term = form.value.term;
@@ -84,4 +82,5 @@ export class SearchComponent implements OnInit {
       form.resetForm();
     });
   }
+  
 }

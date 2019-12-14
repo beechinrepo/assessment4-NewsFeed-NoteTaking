@@ -25,17 +25,12 @@ import { EntryComponent } from './components/entry.component';
 import { EntriesComponent } from './components/entries.component';
 import { AddComponent } from './components/add.component';
 import { ContributorsComponent } from './components/contributors.component';
-import {
-  NgxSocialButtonModule,
-  SocialServiceConfig
-} from 'ngx-social-button';
+import { NgxSocialButtonModule, SocialServiceConfig } from 'ngx-social-button';
 
 // Configs
 export function getAuthServiceConfigs() {
   let config = new SocialServiceConfig()
-      .addFacebook('441224926819771')
-      // .addGoogle("Your-Google-Client-Id")
-      // .addLinkedIn("Your-LinkedIn-Client-Id");
+      .addFacebook('441224926819771');  // fb appId
   return config;
 }
 @NgModule({

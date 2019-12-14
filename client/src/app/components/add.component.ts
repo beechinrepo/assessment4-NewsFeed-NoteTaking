@@ -1,9 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { myAppService } from '../myApp.service';
 import { Router } from '@angular/router';
-
-
 @Component({
   selector: 'app-add',
   templateUrl: './add.component.html',
@@ -11,29 +9,17 @@ import { Router } from '@angular/router';
 })
 export class AddComponent implements OnInit {
   form: FormGroup;
-  categories: [];
+  public categories: [];
 
-  constructor(private mySvc: myAppService, private router: Router) {
-    this.form = this.createFormGroup();
-  }
+  constructor(private mySvc: myAppService,
+              private router: Router) {
+                this.form = this.createFormGroup();
+              }
 
   ngOnInit() {
     this.mySvc.getCategory()
-    .then(result => {
-      this.categories =  result['result'];
-      console.info('entry categories: ', this.categories);
-    })
-    .catch(error => {
-      console.info('error: ', error);
-    });
+    .subscribe(data => this.categories = data['result']);
   }
-
-  // autogrow() {
-  //   const textArea = document.getElementById('description')
-  //   textArea.style.overflow = 'hidden';
-  //   textArea.style.height = 'auto';
-  //   textArea.style.height = textArea.scrollHeight + 'px';
-  // }
 
   createFormGroup() {
     return new FormGroup({
@@ -50,7 +36,7 @@ export class AddComponent implements OnInit {
     this.form.patchValue({
       photo: file
     });
-    this.form.get('photo').updateValueAndValidity()
+    this.form.get('photo').updateValueAndValidity();
   }
 
   onSubmit() {
@@ -71,31 +57,3 @@ export class AddComponent implements OnInit {
       );
     }
   }
-    // onSubmit() {
-    // const val = this.form.value;
-    // const save = {
-    //   category: val.category,
-    //   photo: val.photo,
-    //   username: val.username,
-    //   title: val.title,
-    //   description: val.description
-    // };
-    // console.info(save);
-    // console.info('#imageFile: ', this.imageFile.nativeElement.files);
-    // this.mySvc.addEntry(this.form, this.imageFile)
-    //   .then(response => {
-    //     console.info('added entry: ', response)
-    // });
-
-
-  // add(form: NgForm) {
-  //   console.info('#imageFile: ', this.imageFile.nativeElement.files);
-  //   this.mySvc.addEntry(form, this.imageFile)
-  //     .then(() => this.router.navigate(['/add']))
-  //     .catch(error => console.error(error));
-
-  // }
-
-  
-  // @ViewChild('imageFile', { static: false })
-  // imageFile: ElementRef;

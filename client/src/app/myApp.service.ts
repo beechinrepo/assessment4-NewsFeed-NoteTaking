@@ -1,16 +1,19 @@
 import { Injectable, ElementRef } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { NgForm, FormGroup } from '@angular/forms';
-// import { NEWS, USER, ENTRY } from './models';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class myAppService implements CanActivate {
 
   private authenticated = false;
   private token = '';
+  public data$: BehaviorSubject<any> = new BehaviorSubject(null);
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {
+    this.http.get('/api/newsArticles').subscribe(res => this.data$.next(res));
+   }
 
   isAuthenticated(): boolean {
     return (this.authenticated);
@@ -27,7 +30,7 @@ export class myAppService implements CanActivate {
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${this.token}`);
     return (
-      this.http.get('http://localhost:3000/home', { headers })
+      this.http.get('/api/home', { headers })
         .toPromise()
     );
   }
@@ -40,7 +43,7 @@ export class myAppService implements CanActivate {
       .set('Content-Type', 'application/x-www-form-urlencoded');
 
     return (
-      this.http.post('http://localhost:3000/authenticate',
+      this.http.post('/api/authenticate',
         params.toString(), { headers })
         .toPromise()
         .then((result: any) => {
@@ -68,21 +71,17 @@ export class myAppService implements CanActivate {
     formData.set('photo', fileRef.nativeElement.files[0]);
 
     return (
-      this.http.post<any>('http://localhost:3000/user', formData)
+      this.http.post<any>('/api/user', formData)
         .toPromise()
     );
   }
 
   getNewsSource() {
-    return this.http.get('http://localhost:3000/newsSource');
-  }
-
-  getnewsArticles() {
-    return this.http.get('http://localhost:3000/newsArticles');
+    return this.http.get('/api/newsSource');
   }
 
   getnewsArticleById(source: string) {
-    return this.http.get(`http://localhost:3000/newsArticleById?source=${source}`);
+    return this.http.get(`/api/newsArticleById?source=${source}`);
   }
 
   addCategory(form: NgForm, fileRef: ElementRef): Promise<any> {
@@ -95,93 +94,41 @@ export class myAppService implements CanActivate {
     formData.set('photo', fileRef.nativeElement.files[0]);
 
     return (
-      this.http.post<any>('http://localhost:3000/category', formData)
+      this.http.post<any>('/api/category', formData)
         .toPromise()
     );
   }
 
-  getCategory(): Promise<any> {
-    return this.http.get<any>('http://localhost:3000/category').toPromise();
+  getCategory() {
+    return this.http.get<any>('/api/category');
   }
 
   addEntry(formData) {
-    return this.http.post<any>('http://localhost:3000/entry', formData);
+    return this.http.post<any>('/api/entry', formData);
   }
 
   getEntriesForCategory(category: string): Promise<any> {
-    return this.http.get<any>(`http://localhost:3000/entries/${category}`).toPromise(); // sneak preview
+    return this.http.get<any>(`/api/entries/${category}`).toPromise(); // sneak preview
   }
 
   getEntry(entryId: string): Promise<any> {
-    return this.http.get<any>(`http://localhost:3000/entry/${entryId}`).toPromise(); // sneak preview
+    return this.http.get<any>(`/api/entry/${entryId}`).toPromise();
   }
 
   editEntry(formData, entryId: string) {
-    return this.http.put<any>(`http://localhost:3000/entry/${entryId}/edit`, formData);
+    return this.http.put<any>(`/api/entry/${entryId}/edit`, formData);
   }
 
   deleteEntry(formData, entryId: string) {
-    return this.http.post<any>(`http://localhost:3000/entry/${entryId}/delete`, formData);
+    return this.http.post<any>(`/api/entry/${entryId}/delete`, formData);
   }
 
   getSearchTerm(term: string, limit: string, offset: string): Promise<any> {
-    return this.http.get<any>(`http://localhost:3000/search/${term}?limit=${limit}&offset=${offset}`).toPromise(); // sneak preview
+    return this.http.get<any>(`/api/search/${term}?limit=${limit}&offset=${offset}`).toPromise();
   }
 
   getCount(): Promise<any> {
-    return this.http.get<any>(`http://localhost:3000/count`).toPromise(); // sneak preview
+    return this.http.get<any>(`/api/count`).toPromise();
   }
 
 }
-
-// editEntry(form: NgForm, fileRef: ElementRef, entryId: string): Promise<any> {
-//   // multipart/form-data
-//   const formData = new FormData();
-//   // normal non file files
-//   formData.set('title', form.value['title']);
-//   formData.set('username', form.value['username']);
-//   formData.set('description', form.value['description']);
-//   formData.set('category', form.value['category']);
-//   // file
-//   formData.set('photo', fileRef.nativeElement.files[0]);
-
-//   return (
-//     this.http.post<any>(`http://localhost:3000/entry/edit/${entryId}`, formData)
-//       .toPromise()
-//   );
-// }
-
-  // addEntry(form, fileRef: ElementRef): Promise<any> {
-  //   // multipart/form-data
-  //   const formData = new FormData();
-  //   // normal non file files
-  //   formData.set('title', form.value['title']);
-  //   formData.set('username', form.value['username']);
-  //   formData.set('description', form.value['description']);
-  //   formData.set('category', form.value['category']);
-  //   // file
-  //   formData.set('photo', fileRef.nativeElement.files[0]);
-
-  //   return (
-  //     this.http.post<any>('http://localhost:3000/entry', formData)
-  //       .toPromise()
-  //   );
-  // }
-
-
-  // deleteEntry(form: NgForm, fileRef: ElementRef, entryId: string): Promise<any> {
-  //   // multipart/form-data
-  //   const formData = new FormData();
-  //   // normal non file files
-  //   formData.set('title', form.value['title']);
-  //   formData.set('username', form.value['username']);
-  //   formData.set('description', form.value['description']);
-  //   formData.set('category', form.value['category']);
-  //   // file
-  //   formData.set('photo', fileRef.nativeElement.files[0]);
-
-  //   return (
-  //     this.http.post<any>(`http://localhost:3000/entry/delete/${entryId}`, formData)
-  //       .toPromise()
-  //   );
-  // }

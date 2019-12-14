@@ -1,34 +1,28 @@
 <mat-card>
     <mat-card-title>Register New User</mat-card-title>
+
     <mat-card-content>
-    <form #form="ngForm" (ngSubmit)="submit(form)">
-    <p>
-    <mat-form-field>
-        <input type="text" matInput placeholder="username" name="username" ngModel required>
-    </mat-form-field>
-    </p>
-    
-    <p>
-    <mat-form-field>
-        <input type="password" matInput placeholder="password" name="password" ngModel required>
-    </mat-form-field>
-    </p>
-    
-    <p>
-    <mat-form-field>
-        <input type="text" matInput placeholder="email" name="email" ngModel required>
-    </mat-form-field>
-    </p>
+        <form #form="ngForm" (ngSubmit)="submit(form)">
 
-    <label for="photo">Photo</label>
-    <br>
-    <input type="file" placeholder="photo" name="photo" #imageFile accept="image/*" ngModel>
-    <br>
+        <mat-form-field>
+            <input type="text" matInput placeholder="username" name="username" ngModel required>
+        </mat-form-field>
 
-    <div class="button">
-    <button type="submit" mat-button [disabled]="form.invalid">register</button>
-    </div>
-    
-    </form>
+        <mat-form-field>
+            <input type="password" matInput placeholder="password" name="password" ngModel required>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input type="text" matInput placeholder="email" name="email" ngModel required>
+        </mat-form-field>
+
+        <label for="photo">Photo</label><br>
+        <input type="file" placeholder="photo" name="photo" #imageFile accept="image/*" ngModel><br>
+
+        <div class="button">
+            <button type="submit" mat-button [disabled]="form.invalid">register</button>
+        </div>
+        
+        </form>
     </mat-card-content>
 </mat-card>

@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { myAppService } from '../myApp.service';
-import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SocialService } from 'ngx-social-button';
+
 
 @Component({
   selector: 'app-home',
@@ -10,25 +9,20 @@ import { SocialService } from 'ngx-social-button';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  mArticles: Array<any>;
+  // mArticles: Array<any>;
   mSources: Array<any>;
-  url: string;
-
-  shareObj = {
-    href: this.url
-  };
-
+  public mArticles: Array<any>;
+  
   constructor(private mySvc: myAppService,
-              private router: Router,
-              private socialAuthService: SocialService) { }
+              private router: Router) {
+                this.mArticles = this.mySvc.data$.value;
+                this.mySvc.data$.subscribe(res => this.mArticles = res['data']);
+              }
 
   ngOnInit() {
     console.info('is authenticated: ', this.mySvc.isAuthenticated());
     this.reload();
 
-    //load articles
-    this.mySvc.getnewsArticles().subscribe(data => this.mArticles = data['data']);
-    //load news sources
     this.mySvc.getNewsSource().subscribe(data => this.mSources = data['data']);
   }
 
@@ -47,12 +41,4 @@ export class HomeComponent implements OnInit {
     this.mySvc.getnewsArticleById(source).subscribe(data => this.mArticles = data['data']);
   }
 
-  getURL(URL:string) {
-    this.url = URL;
-    console.info('getURL: ', this.url);
-  }
-
 }
-
-// appID: 441224926819771
-// App Secret: aa4d284ef8a0f8bebb49b400d6669340

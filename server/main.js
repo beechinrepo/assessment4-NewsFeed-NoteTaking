@@ -13,7 +13,6 @@ const uuid = require('uuid');
 const jwt = require('jsonwebtoken');
 
 const db = require('./dbutil');
-// const config = require('C:/Users/Carine/src/tmp/config(full)');
 
 let config;
 if (fs.existsSync(__dirname + '/config(full).js')) {
@@ -140,14 +139,13 @@ app.use(cors());
 app.use(morgan('tiny'));
 app.use(passport.initialize())
 
-app.get('/status/:code',
+app.get('/api/status/:code',
         (req, resp) => {
-            // need to do a little more checking
             resp.status(parseInt(req.params.code)).json({ message: 'incorrect login' })
         }
 )
 
-app.get('/home',
+app.get('/api/home',
     (req, resp, next) => {
         const authorization = req.get('Authorization'); // http header
         if (!(authorization && authorization.startsWith('Bearer ')))
@@ -187,9 +185,9 @@ app.get('/home',
     }
 )
 
-app.post('/authenticate', 
+app.post('/api/authenticate', 
     passport.authenticate('local', {
-        failureRedirect: '/status/401',
+        failureRedirect: '/api/status/401',
         session: false
     }),
     (req, resp) => {
@@ -216,7 +214,7 @@ app.post('/authenticate',
 
 // Configure Routes
 // get newsSource
-app.get('/newsSource', (req, resp) => { 
+app.get('/api/newsSource', (req, resp) => { 
     const options = {
         url: process.env.API_URL,
         qs: {
@@ -259,7 +257,7 @@ app.get('/newsSource', (req, resp) => {
 })
 
 // get newsArticle
-app.get('/newsArticles', (req, resp) => { 
+app.get('/api/newsArticles', (req, resp) => { 
     const options = {
         url: process.env.API_URL1,
         qs: {
@@ -302,8 +300,8 @@ app.get('/newsArticles', (req, resp) => {
 })
 
 // get newsArticleById
-app.get('/newsArticleById', (req, resp) => { 
-    const source = req.query.source // change to frontend
+app.get('/api/newsArticleById', (req, resp) => { 
+    const source = req.query.source
     const options = {
         url: process.env.API_URL1,
         qs: {
@@ -346,7 +344,7 @@ app.get('/newsArticleById', (req, resp) => {
 })
 
 // add User
-app.post('/user', fileUpload.single('photo'),
+app.post('/api/user', fileUpload.single('photo'),
     (req, resp, next) => {
         // input type=<not file>
         console.info('req.body: ', req.body);
@@ -450,7 +448,7 @@ app.post('/user', fileUpload.single('photo'),
 )
 
 // add Category
-app.post('/category', fileUpload.single('photo'),
+app.post('/api/category', fileUpload.single('photo'),
    (req,resp)=>{  
            console.info('req.body: ', req.body);
            console.info('req.file: ', req.file);
@@ -465,19 +463,19 @@ app.post('/category', fileUpload.single('photo'),
                     status => {
                         if (typeof(req.file) !== 'undefined') {
                             const params = [
-                                uuid().substring(0,8), //these need to match the names in the form
-                                req.body.category,  // food
-                                req.body.colorCode,  // pink
-                                req.file.filename // food.jpg
+                                uuid().substring(0,8),
+                                req.body.category,
+                                req.body.colorCode,
+                                req.file.filename
                             ]
                             console.info('sql insert_category params: ', params);
                             return (insertCategory({connection:status.connection, params: params}));
                         }
                         else {
                             const params = [
-                            uuid().substring(0,8), //these need to match the names in the form
-                            req.body.category,  // food
-                            req.body.colorCode,  // pink
+                            uuid().substring(0,8),
+                            req.body.category,
+                            req.body.colorCode,
                             'nothing'
                             ]
                             console.info('sql insert_category params: ', params);
@@ -552,7 +550,7 @@ app.post('/category', fileUpload.single('photo'),
 )
 
 // get Category
-app.get('/category',
+app.get('/api/category',
 	(req, resp) => {
         findCategory()
             .then(result => {
@@ -565,7 +563,7 @@ app.get('/category',
 )
 
 // add Entry
-app.post('/entry', fileUpload.single('photo'),
+app.post('/api/entry', fileUpload.single('photo'),
     (req, resp, next) => {
         // input type=<not file>
         console.info('req.body: ', req.body);
@@ -591,9 +589,9 @@ app.post('/entry', fileUpload.single('photo'),
                         console.info('file...');
                         if (typeof(req.file) == 'undefined') {
                             const params = [
-                                'nothing',  // as text
+                                'nothing',
                                 req.body.title, 
-                                status.result[0].catId, // prep3-angular; test3.js
+                                status.result[0].catId,
                                 req.body.username 
                             ]
                             console.info('sql params: ', params);
@@ -601,9 +599,9 @@ app.post('/entry', fileUpload.single('photo'),
                         }
                         else {
                             const params = [
-                                req.file.filename,  // as text
+                                req.file.filename,
                                 req.body.title, 
-                                status.result[0].catId, // prep3-angular; test3.js
+                                status.result[0].catId,
                                 req.body.username 
                             ]
                             console.info('sql params: ', params);
@@ -614,7 +612,7 @@ app.post('/entry', fileUpload.single('photo'),
                 .then(
                     status => {
                         console.info(`mongo inserts: ${status.result.insertId} ${req.body.description}`);
-                        conns.mongodb.db('myApp').collection('entryDescription') // find:cursor. insert: promise
+                        conns.mongodb.db('myApp').collection('entryDescription')
                             .insertOne({
                                 entryId: status.result.insertId, 
                                 entryDescription: req.body.description
@@ -689,7 +687,7 @@ app.post('/entry', fileUpload.single('photo'),
 )
 
 // get All Entries (just sneak preview)
-app.get('/entries/:category',
+app.get('/api/entries/:category',
     (req, resp) => {
         const category = req.params.category
         findCatId1([category])
@@ -703,7 +701,7 @@ app.get('/entries/:category',
                 const filtered = r1.map(v => {
                     const filter = {
                         entryId: v.entryId,
-                        photo: v.photo, //can just get from digitalocean using html
+                        photo: v.photo,
                         title: v.title,
                         catId: v.catId,
                         username: v.username,
@@ -723,7 +721,7 @@ app.get('/entries/:category',
 )        
 
 // get Entry
-app.get('/entry/:entryId',
+app.get('/api/entry/:entryId',
     (req, resp) => {
         const entryId = parseInt(req.params.entryId);
         const p0 = getEntry([entryId])
@@ -740,7 +738,7 @@ app.get('/entry/:entryId',
                 const filtered = r0.map(v => {
                     const filter = {
                         entryId: v.entryId,
-                        photo: v.photo, //can just get from digitalocean using html
+                        photo: v.photo,
                         title: v.title,
                         catId: v.catId,
                         username: v.username,
@@ -766,10 +764,8 @@ app.get('/entry/:entryId',
     }
 )        
 
-
-// photo, title, catId, username, entryId
 // edit Entry
-app.put('/entry/:entryId/edit', fileUpload.single('photo'),
+app.put('/api/entry/:entryId/edit', fileUpload.single('photo'),
     (req, resp) => {
         console.info('request body:', req.body);
         console.info('request params:', req.params);
@@ -819,7 +815,7 @@ app.put('/entry/:entryId/edit', fileUpload.single('photo'),
                     status => {
                         console.info(`mongo inserts: ${status.result.insertId} ${req.body.description}`);
                         const id = parseInt(req.params.entryId);
-                        conns.mongodb.db('myApp').collection('entryDescription') // find:cursor. insert: promise
+                        conns.mongodb.db('myApp').collection('entryDescription')
                             .updateOne(
                                 { entryId: id},
                                 {
@@ -843,7 +839,7 @@ app.put('/entry/:entryId/edit', fileUpload.single('photo'),
                                 if (err)
                                     return reject({connection: status.connection, error: err})
                                 const params = {
-                                    Bucket: 'belloz', Key: `myApp/${req.file.filename}`,  // post photo on DO spaces 
+                                    Bucket: 'belloz', Key: `myApp/${req.file.filename}`,
                                     Body: imgFile, ContentType: req.file.mimetype,
                                     ContentLength:  req.file.size, ACL: 'public-read'
                                 }
@@ -897,7 +893,7 @@ app.put('/entry/:entryId/edit', fileUpload.single('photo'),
 
 
 // delete Entry
-app.post('/entry/:entryId/delete', fileUpload.single('photo'),
+app.post('/api/entry/:entryId/delete', fileUpload.single('photo'),
     (req, resp) => {
         console.info('request body:', req.body);
         console.info('request params:', req.params);
@@ -916,12 +912,11 @@ app.post('/entry/:entryId/delete', fileUpload.single('photo'),
                     }
                 )
                 .then (
-                    //insert into MySQL DB
                     status => {
                         const params = [
                             req.body.photo,
                             req.body.title, 
-                            status.result[0].catId, // prep3-angular; test3.js
+                            status.result[0].catId,
                             req.body.username 
                         ]
                         console.info('sql insert deleted_entry params: ', params);
@@ -931,7 +926,7 @@ app.post('/entry/:entryId/delete', fileUpload.single('photo'),
                 .then(
                     status => {
                         console.info(`mongo inserts deleted_entry: ${status.result.insertId} ${req.body.description}`);
-                        conns.mongodb.db('myApp').collection('deleted_entryDescription') // find:cursor. insert: promise
+                        conns.mongodb.db('myApp').collection('deleted_entryDescription')
                             .insertOne({
                                 entryId: status.result.insertId, 
                                 entryDescription: req.body.description
@@ -951,7 +946,7 @@ app.post('/entry/:entryId/delete', fileUpload.single('photo'),
                 .then(
                     status => {
                         const id = parseInt(req.params.entryId);
-                        conns.mongodb.db('myApp').collection('entryDescription') // find:cursor. insert: promise
+                        conns.mongodb.db('myApp').collection('entryDescription')
                             .deleteOne({
                                 entryId: id
                             })  
@@ -973,8 +968,8 @@ app.post('/entry/:entryId/delete', fileUpload.single('photo'),
     }
 )
 
-// search bar (sneak preview; later click in to view an entry)
-app.get('/search/:term',
+// search Bar (sneak preview; later click in to view an entry)
+app.get('/api/search/:term',
     (req, resp) => {
         const limit = parseInt(req.query.limit) || 5;
         const offset = parseInt(req.query.offset) || 0;
@@ -1011,7 +1006,7 @@ app.get('/search/:term',
     )  
 
 
-app.get('/count',
+app.get('/api/count',
 	(req, resp) => {
         entryCount()
         .then(result => {
@@ -1037,730 +1032,3 @@ testConnections(conns)
 		console.error(error);
 		process.exit(-1);
     })
-    
-// // add Entry
-// app.post('/entry', fileUpload.single('photo'),
-//     (req, resp, next) => {
-//         // input type=<not file>
-//         console.info('req.body: ', req.body);
-//         console.info('req.file: ', req.file);
-        
-//         conns.mysql.getConnection(
-//             (err, conn) => {
-//                 if (err){
-//                     return resp.status(500).type('text/plain').send(`Error ${err}`);
-//                 }
-                
-//                 db.startTransaction(conn)
-//                 .then(
-//                     status => {
-//                         const params = [
-//                             req.body.category
-//                         ]
-//                         return (findCatId({connection:status.connection, params: params}));
-//                     }
-//                 )
-//                 .then (
-//                     //insert into MySQL DB
-//                     status => {
-//                         const params = [
-//                             req.file.filename,  // as text
-//                             req.body.title, 
-//                             status.result[0].catId, // prep3-angular; test3.js
-//                             req.body.username 
-//                         ]
-//                         console.info('sql params: ', params);
-//                         return (insertEntry({connection:status.connection, params: params}));
-//                     }
-//                 )
-//                 .then(
-//                     status => {
-//                         console.info(`mongo inserts: ${status.result.insertId} ${req.body.description}`);
-//                         conns.mongodb.db('myApp').collection('entryDescription') // find:cursor. insert: promise
-//                             .insertOne({
-//                                 entryId: status.result.insertId, 
-//                                 entryDescription: req.body.description
-//                             })  
-//                             return ({connection:status.connection});   
-//                     }
-//                 )
-//                 .then(status => 
-//                     new Promise(
-//                         (resolve, reject) => {
-//                             fs.readFile(req.file.path,(err, imgFile) => {
-//                                 if (err)
-//                                     return reject({connection: status.connection, error: err})
-//                                 const params = {
-//                                     Bucket: 'belloz', Key: `myApp/${req.file.filename}`,  // post photo on DO spaces 
-//                                     Body: imgFile, ContentType: req.file.mimetype,
-//                                     ContentLength:  req.file.size, ACL: 'public-read'
-//                                 }
-//                                 conns.s3.putObject(params, 
-//                                     (error, result) => {
-//                                         if (error)
-//                                             return reject({ connection: status.connection, error })
-//                                         resolve({ connection: status.connection, result })
-//                                     }
-//                                 )
-//                             })
-//                         }
-//                     )
-//                 )
-//                 .then(db.commit, db.rollback) // success, fail (or .catch)
-//                 .then(
-//                     (status)=>{
-//                         return new Promise(
-//                             (resolve, reject) =>{
-//                                 fs.unlink(req.file.path, () =>{
-//                                     resp.status(201).json({ message: JSON.stringify(status.result) }); //**must return json */
-//                                     resolve;
-//                                 })
-//                             }
-//                         )
-//                     },
-//                     (status)=>{
-//                         resp.status(400).type('text/plain').send(`Error ${status.error}`);
-//                     }
-//                 )
-//                 .finally(()=>conn.release);
-//             }
-//         )
-//     }
-// )
-
-
-    // add Category
-// app.post('/category', fileUpload.single('photo'),
-// (req,resp)=>{  
-//         console.info('req.body: ', req.body);
-//         console.info('req.file: ', req.file);
-//         conns.mysql.getConnection(
-//          (err, conn) => {
-//              if (err){
-//                  return resp.status(500).type('text/plain').send(`Error ${err}`);
-//              }
-             
-//              db.startTransaction(conn)
-//              .then(
-//                  status => {
-//                      const params = [
-//                          uuid().substring(0,8), //these need to match the names in the form
-//                          req.body.category,  // food
-//                          req.body.colorCode,  // pink
-//                          req.file.filename // food.jpg
-//                      ]
-//                      console.info('sql insert_category params: ', params);
-//                      return (insertCategory({connection:status.connection, params: params}));
-//                  }
-//              )
-//              .then(status => 
-//                  new Promise(
-//                      (resolve, reject) => {
-//                          fs.readFile(req.file.path,(err, imgFile) => {
-//                              if (err)
-//                                  return reject({connection: status.connection, error: err})
-//                              const params = {
-//                                  Bucket: 'belloz', Key: `myApp/${req.file.filename}`,  // post photo on DO spaces 
-//                                  Body: imgFile, ContentType: req.file.mimetype,
-//                                  ContentLength:  req.file.size, ACL: 'public-read'
-//                              }
-//                              conns.s3.putObject(params, 
-//                                  (error, result) => {
-//                                      if (error)
-//                                          return reject({ connection: status.connection, error })
-//                                      resolve({ connection: status.connection, result })
-//                                  }
-//                              )
-//                          })
-//                      }
-//                  )
-//              )
-//              .then(db.commit, db.rollback) // success, fail (or .catch)
-//              .then(
-//                  (status)=>{
-//                      return new Promise(
-//                          (resolve, reject) =>{
-//                              fs.unlink(req.file.path, () =>{
-//                                  resp.status(201);
-//                                  resp.format({ 					
-//                                      'text/html': ()=>{
-//                                          console.log("returning html");
-//                                          resp.type('text/plain').send(`added_category: ${req.body.category}`);
-//                                      },
-//                                      'application/json': ()=>{
-//                                          console.log("returning json");
-//                                          resp.json({added_category: req.body.category});
-                                         
-//                                      } 
-//                                  })
-//                                  resolve;
-//                              })
-//                          }
-//                      )
-//                  },
-//                  (status)=>{
-//                      resp.status(400).type('text/plain').send(`Error ${status.error}`);
-//                  }
-//              )
-//              .finally(()=>conn.release);
-//          }
-//      )
-//  }
-// )
-
-//     app.delete('/entry/:entryId/delete',
-//     (req, resp) => {
-//         console.info('request params:', req.params);
-//         conns.mysql.getConnection(
-//             (err, conn) => {
-//                 if (err){
-//                     return resp.status(500).json({ message: JSON.stringify(error) });
-//                 }
-//                 db.startTransaction(conn)
-//                 .then (
-//                     status => {
-//                         const params = [
-//                             req.params.entryId
-//                         ]
-//                         console.info('sql delete params: ', params);
-//                         return (deleteEntry({connection:status.connection, params: params}));
-//                     }
-//                 )
-//                 .then(
-//                     status => {
-//                         const id = parseInt(req.params.entryId);
-//                         conns.mongodb.db('myApp').collection('entryDescription') // find:cursor. insert: promise
-//                             .deleteOne({
-//                                 entryId: id
-//                             })  
-//                             console.info(`mongo delete: ${req.params.entryId}`);
-//                             return ({connection:status.connection});   
-//                     }
-//                 )
-//                 .then(db.commit, db.rollback) // success, fail (or .catch)
-//                 .then(status =>
-//                     resp.status(201).json({ message: JSON.stringify(status.result)})
-//                 )
-//                 .catch(status =>
-//                     resp.status(400).json({ message: JSON.stringify(status.error) })
-//                 )
-//                 .finally(()=>conn.release);
-//             }
-//         )
-//     }
-// )
-
-// // delete Entry
-// app.post('/entry/delete/:entryId', fileUpload.single('photo'),
-//     (req, resp) => {
-//         console.info('request body:', req.body);
-//         console.info('request params:', req.params);
-//         conns.mysql.getConnection(
-//             (err, conn) => {
-//                 if (err){
-//                     return resp.status(500).type('text/plain').send(`Error ${err}`);
-//                 }
-//                 db.startTransaction(conn)
-//                 .then (
-//                     //insert into MySQL DB
-//                     status => {
-//                         const params = [
-//                             req.body.photo,
-//                             req.body.title, 
-//                             req.body.catId, // prep3-angular; test3.js
-//                             req.body.username 
-//                         ]
-//                         console.info('sql insert deleted_entry params: ', params);
-//                         return (insertDeletedEntry({connection:status.connection, params: params}));
-//                     }
-//                 )
-//                 .then(
-//                     status => {
-//                         console.info(`mongo inserts deleted_entry: ${status.result.insertId} ${req.body.description}`);
-//                         conns.mongodb.db('myApp').collection('deleted_entryDescription') // find:cursor. insert: promise
-//                             .insertOne({
-//                                 entryId: status.result.insertId, 
-//                                 entryDescription: req.body.description
-//                             })  
-//                             return ({connection:status.connection});   
-//                     }
-//                 )
-//                 .then (
-//                     status => {
-//                         const params = [
-//                             req.params.entryId
-//                         ]
-//                         console.info('sql delete params: ', params);
-//                         return (deleteEntry({connection:status.connection, params: params}));
-//                     }
-//                 )
-//                 .then(
-//                     status => {
-//                         conns.mongodb.db('myApp').collection('entryDescription') // find:cursor. insert: promise
-//                             .deleteOne({
-//                                 entryId: parseInt(req.params.entryId)
-//                             })  
-//                             console.info(`mongo delete: ${req.params.entryId}`);
-//                             return ({connection:status.connection});   
-//                     }
-//                 )
-//                 .then(db.commit, db.rollback) // success, fail (or .catch)
-//                 .then(status =>
-//                     resp.status(201).type('text/plain').send(`Deleted entry: ${req.body.title}`)
-//                 )
-//                 .catch(status =>
-//                     resp.status(400).type('text/plain').send(`Error ${status.error}`)
-//                 )
-//                 .finally(()=>conn.release);
-//             }
-//         )
-//     }
-// )
-
-// app.put('/entry/:entryId/edit', fileUpload.single('photo'),
-//     (req, resp) => {
-//         console.info('request body:', req.body);
-//         console.info('request params:', req.params);
-//         conns.mysql.getConnection(
-//             (err, conn) => {
-//                 if (err){
-//                     return resp.status(500).json({ message: JSON.stringify(error) });
-//                 }
-//                 db.startTransaction(conn)
-//                 .then (
-//                     status => {
-//                         const params = [
-//                             req.params.entryId
-//                         ]
-//                         console.info('sql delete params: ', params);
-//                         return (deleteEntry({connection:status.connection, params: params}));
-//                     }
-//                 )
-//                 .then(
-//                     status => {
-//                         conns.mongodb.db('myApp').collection('entryDescription') // find:cursor. insert: promise
-//                             .deleteOne({
-//                                 entryId: parseInt(req.params.entryId)
-//                             })  
-//                             console.info(`mongo delete: ${req.params.entryId}`);
-//                             return ({connection:status.connection});   
-//                     }
-//                 )
-//                 .then(
-//                     status => {
-//                         const params = [
-//                             req.body.category
-//                         ]
-//                         return (findCatId({connection:status.connection, params: params}));
-//                     }
-//                 )
-//                 .then (
-//                     //insert into MySQL DB
-//                     status => {
-//                         const params = [
-//                             req.file.filename,  // as text
-//                             req.body.title, 
-//                             status.result[0].catId, // prep3-angular; test3.js
-//                             req.body.username 
-//                         ]
-//                         console.info('sql params: ', params);
-//                         return (insertEntry({connection:status.connection, params: params}));
-//                     }
-//                 )
-//                 .then(
-//                     status => {
-//                         console.info(`mongo inserts: ${status.result.insertId} ${req.body.description}`);
-//                         conns.mongodb.db('myApp').collection('entryDescription') // find:cursor. insert: promise
-//                             .insertOne({
-//                                 entryId: status.result.insertId, 
-//                                 entryDescription: req.body.description
-//                             })  
-//                             return ({connection:status.connection});   
-//                     }
-//                 )
-//                 .then(status => 
-//                     new Promise(
-//                         (resolve, reject) => {
-//                             fs.readFile(req.file.path,(err, imgFile) => {
-//                                 if (err)
-//                                     return reject({connection: status.connection, error: err})
-//                                 const params = {
-//                                     Bucket: 'belloz', Key: `myApp/${req.file.filename}`,  // post photo on DO spaces 
-//                                     Body: imgFile, ContentType: req.file.mimetype,
-//                                     ContentLength:  req.file.size, ACL: 'public-read'
-//                                 }
-//                                 conns.s3.putObject(params, 
-//                                     (error, result) => {
-//                                         if (error)
-//                                             return reject({ connection: status.connection, error })
-//                                         resolve({ connection: status.connection, result })
-//                                     }
-//                                 )
-//                             })
-//                         }
-//                     )
-//                 )
-//                 .then(db.commit, db.rollback) // success, fail (or .catch)
-//                 .then(
-//                     (status)=>{
-//                         return new Promise(
-//                             (resolve, reject) =>{
-//                                 fs.unlink(req.file.path, () =>{
-//                                     resp.status(201).json({ message: JSON.stringify(status.result) });;
-//                                     resolve;
-//                                 })
-//                             }
-//                         )
-//                     },
-//                     (status)=>{
-//                         return resp.status(400).json({ message: JSON.stringify(status.error) });
-//                     }
-//                 )
-//                 .finally(()=>conn.release);
-//             }
-//         )
-//     }
-// )
-
-//     app.post('/entry', fileUpload.single('photo'),
-//     (req, resp, next) => {
-//         // input type=<not file>
-//         console.info('req.body: ', req.body);
-//         console.info('req.file: ', req.file);
-        
-//         conns.mysql.getConnection(
-//             (err, conn) => {
-//                 if (err){
-//                     return resp.status(500).type('text/plain').send(`Error ${err}`);
-//                 }
-                
-//                 db.startTransaction(conn)
-//                 .then(
-//                     status => {
-//                         const params = [
-//                             req.body.category
-//                         ]
-//                         return (findCatId({connection:status.connection, params: params}));
-//                     }
-//                 )
-//                 .then (
-//                     //insert into MySQL DB
-//                     status => {
-//                         const entryId = uuid().substring(0,8);
-//                         const params = [
-//                             entryId, 
-//                             req.file.filename,  // as text
-//                             req.body.title, 
-//                             status.result[0].catId, // prep3-angular; test3.js
-//                             req.body.username 
-//                         ]
-//                         console.info('sql params: ', params);
-//                         return (insertEntry({connection:status.connection, params: params}));
-//                     }
-//                 )
-//                 .then(
-//                     status => {
-//                         return (getEntryId({connection:status.connection, params: params}));
-//                     }
-//                 )}
-//             }
-//                 .then(
-//                     status => {
-//                         console.info(`mongo inserts: ${status.result.insertId} ${req.body.description}`);
-//                         const p0 = conns.mongodb.db('myApp').collection('entryDescription') // find:cursor. insert: promise
-//                             .insertOne({
-//                                 entryId: status.result[0].entryId, 
-//                                 catId: status.result[0].catId, 
-//                                 entryDescription: req.body.description
-//                             })  
-//                             .then((result) => {
-//                                 console.info(result);
-//                             })    
-//                     }
-//                 )
-//                 .then(status => 
-//                     new Promise(
-//                         (resolve, reject) => {
-//                             fs.readFile(req.file.path,(err, imgFile) => {
-//                                 if (err)
-//                                     return reject({connection: status.connection, error: err})
-//                                 const params = {
-//                                     Bucket: 'belloz', Key: `articles/${req.file.filename}`,  // post photo on DO spaces 
-//                                     Body: imgFile, ContentType: req.file.mimetype,
-//                                     ContentLength:  req.file.size, ACL: 'public-read'
-//                                 }
-//                                 conns.s3.putObject(params, 
-//                                     (error, result) => {
-//                                         if (error)
-//                                             return reject({ connection: status.connection, error })
-//                                         resolve({ connection: status.connection, result })
-//                                     }
-//                                 )
-//                             })
-//                         }
-//                     )
-//                 )
-//                 .then(db.commit, db.rollback) // success, fail (or .catch)
-//                 .then(
-//                     (status)=>{
-//                         return new Promise(
-//                             (resolve, reject) =>{
-//                                 fs.unlink(req.file.path, () =>{
-//                                     resp.status(201).type('text/plain').send(`Posted entry: ${req.body.title}`);
-//                                     resolve;
-//                                 })
-//                             }
-//                         )
-//                     },
-//                     (status)=>{
-//                         resp.status(400).type('text/plain').send(`Error ${status.error}`);
-//                     }
-//                 )
-//                 .finally(()=>conn.release);
-//             }
-//         )
-//     }
-// )
-
-
-    // .then(
-    //     status => {
-    //         console.info('mongo gets:', status.result)
-    //         const filtered = status.result.map(v => {
-    //             const filter = {
-    //                 entryId: v.entryId
-    //             };
-    //             return filter;
-    //         });  
-           
-    //         console.info('mongo gets filtered:', filtered)
-    //         const res = filtered.reduce((a, b) => {
-    //             for(let i in b) {
-    //               if(!a[i]) {
-    //                 a[i] = [];
-    //               }
-    //               a[i].push(b[i]);
-    //             }
-                
-    //             return a;
-    //           }, {});
-              
-    //           console.log(res.entryId);
-    //         const p1 = conns.mongodb.db('myApp').collection('entryDescription') // find:cursor. insert: promise
-    //             .find({
-    //                 entryId: {$in: res.entryId}
-    //             })
-    //             .toArray();
-    //             Promise.all([p1])
-    //                 .then(result => {
-    //                     resp.status(200).type('application/json').json(result);
-    //                 })
-    //                 .catch(error => {
-    //                     resp.status(500).type('application/json').json(error);
-    //                 })
-    //     })
-
-
-
-
-
-
-// const SELECT_PRODUCTS = 'select * from products';
-// const selectProducts = db.mkQueryFromPool(db.mkQuery(SELECT_PRODUCTS), conns.mysql);
-
-// app.get(['/', '/products'],
-// 	(req, resp) => {
-//         selectProducts()
-// 			.then(result => {
-// 				resp.status(200).type('application/json').json(result)
-// 			})
-// 			.catch(error => {
-// 				resp.status(400).type('application/json').json({ error })
-// 			})
-// 	}
-// )
-
-// // SQL - prep3angular
-// // POST
-// const CREATE_ORDER = 'insert into orders(order_date, email) values (?, ?)';
-// const GET_NEW_ORDER_ID = 'select last_insert_id() as order_id from orders';
-// const CREATE_ORDER_DETAILS = 'insert into line_item(description, quantity, order_id) values ?';
-
-// const createOrder = db.mkQuery(CREATE_ORDER);
-// const getNewOrderId = db.mkQuery(GET_NEW_ORDER_ID)
-// const createOrderDetails = db.mkQuery(CREATE_ORDER_DETAILS);
-
-// // GET ALL
-
-
-// const GET_ALL_ORDERS = 'select * from orders';
-// const getAllOrders = db.mkQueryFromPool(db.mkQuery(GET_ALL_ORDERS), conns.mysql);
-
-
-// // GET BY ID
-// const FIND_ORDER_BY_ID = 'select * from orders o join line_item od on o.order_id = od.order_id where o.order_id= ?'
-// const getOrderByOrderId = db.mkQueryFromPool(db.mkQuery(FIND_ORDER_BY_ID), conns.mysql);
-
-// const DELETE_ORDER_DETAILS = 'delete from line_item where order_id=?';
-// const deleteOrderDetails = db.mkQuery(DELETE_ORDER_DETAILS);
-
-// //test
-// // const newOrder = [ new Date(), 'belloz2@gmail.com' ];
-// // const newOrderSample = [
-// // 	[ 'apple', 20 ],
-// // 	[ 'grapes', 10 ],
-// // 	[ 'orange', 30 ],
-// // ];
-
-// app.get('/api/order/:orderId',
-// 	(req, resp) => {
-// 		const orderId = parseInt(req.params.orderId);
-// 		getOrderByOrderId([ orderId ])
-// 			.then(result => {
-// 				if (result.length <= 0)
-// 					return resp.status(404).type('application/json').json({});
-// 				const order = {
-// 					email: result[0].email,
-// 					orderId: result[0].order_id,
-// 					orderDetails: []
-// 				}
-// 				order.orderDetails = result.map(v => {
-// 					return {
-// 						item_id: v.item_id, // [{all cols}, {}, {}]
-// 						description: v.description,
-// 						quantity: v.quantity
-// 					}
-// 				});
-// 				resp.status(200).type('application/json').json(order);
-// 			})
-// 			.catch(error => {
-// 				resp.status(400).type('application/json').json({ error })
-// 			})
-// 	}
-// )
-
-// app.get('/api/orders',
-// 	(req, resp) => {
-// 		getAllOrders()
-// 			.then(result => {
-// 				resp.status(200).type('application/json').json(result)
-// 			})
-// 			.catch(error => {
-// 				resp.status(400).type('application/json').json({ error })
-// 			})
-// 	}
-// )
-
-// app.post('/api/order/:orderId', express.json(),
-//     (req, resp) => {
-//         console.info("request body:", req.body);
-//         //console.info("request params:", req.params);
-//         const editOrder = req.params.orderId;
-//         const newOrder = [ editOrder, req.body.email];
-//         const newOrderSample = req.body.orderDetails.map(v=> [v.description, v.quantity]);
-
-//         console.info("editOrder:", editOrder);
-//         console.info("newOrder:", newOrder);
-//         console.info("newOrderSample:", newOrderSample);
-
-//         //resp.status(201).json({});
-
-//         // Get a conection
-//         conns.mysql.getConnection(
-//             (err, conn) => {
-//                 if (err)
-//                     throw err;
-//                 // Start transaction
-//                 // { connection, result, params, error }
-//                 db.startTransaction(conn)
-//                     .then(status => {
-//                         //status.connection
-//                         return (
-//                             deleteOrderDetails({
-//                                 connection: status.connection,
-//                                 params: editOrder
-//                             })
-//                         )
-// 					})
-//                     //.then(getNewOrderId) // (status) => { }
-//                     .then(status => {
-//                         console.info('console: before getNewOrderId: ', status.result);
-//                         //const newOrderId = status.result[0].ord_id;
-//                         const newOrderId = editOrder;
-//                         const newOrderDetails = newOrderSample.map(
-//                             v => {
-//                                 v.push(newOrderId);
-//                                 return (v);
-//                             }
-//                         )
-//                         console.info('newOrderDetails: ', newOrderDetails);
-//                         return (
-//                             createOrderDetails({
-//                                 connection: status.connection,
-//                                 params: [ newOrderDetails ] 
-//                             })
-//                         )
-//                     })
-//                     .then(db.commit, db.rollback)
-//                     .then(
-//                         (status) => { resp.status(201).json({}); },
-// 						(status) => { resp.status(400).json({ error: status.error }); }
-//                     )
-//                     .finally (() => { conn.release() })
-//             }   // getConnection
-//         )
-//     }
-// );
-
-
-// app.post ('/api/order', express.json(),
-//     (req,resp) => {
-//         console.log('body: ', req.body);
-//         const newOrder = [new Date(), req.body.email];
-//         const newOrderSample = req.body.orderDetails.map(v => [v.description, v.quantity]);
-//         console.log('order: ', newOrder);
-//         console.log('orderdetails: ', newOrderSample);
-//         // res.status(201).json({});
-// 		conns.mysql.getConnection(
-// 			(err, conn) => {
-// 				if (err)
-// 					throw err;
-// 				// Start transaction
-// 				// { connection, result, params, error }
-// 				db.startTransaction(conn)
-// 					.then(status => {
-// 						//status.connection
-// 						return (
-// 							createOrder({ 
-// 								connection: status.connection, 
-// 								params: newOrder
-// 							})
-// 						)
-// 					})
-// 					// .then(getNewOrderId) // (status) => { }
-// 					.then(status => {
-// 						// const newOrderId = status.result[0].ord_id;
-// 						const newOrderId = status.result.insertId;
-// 						const newOrderDetails = newOrderSample.map(
-// 							v => {
-// 								v.push(newOrderId);
-// 								return (v);
-// 							}
-// 						);
-// 						return (
-// 							createOrderDetails({
-// 								connection: status.connection,
-// 								params: [ newOrderDetails ]
-// 							})
-// 						)
-// 					})
-// 					.then(db.commit, db.rollback)
-// 					.then(
-// 						(status) => { resp.status(201).json({}); },
-// 						(status) => { resp.status(400).json({ error: status.error }); }
-// 					)
-// 					.finally(() => { conn.release() })
-// 			} // getConnection
-// 		)
-// 	}
-// )
