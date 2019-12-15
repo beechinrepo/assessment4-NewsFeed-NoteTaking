@@ -29,7 +29,7 @@ if (fs.existsSync(__dirname + '/config(full).js')) {
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: 'myApp',
-            connectionLimit: 4,
+            connectionLimit: 30,
             ssl: {
                 ca: process.env.DB_CA
             },

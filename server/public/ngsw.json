@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1576338767343,
+  "timestamp": 1576370136566,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -325,8 +325,8 @@
     "/assets/images/wirtschafts-woche.png": "c4b01125cd2b0bfe88cbf94927b73ddf52e2cab3",
     "/assets/images/xinhua-net.png": "d76ba4960d78f4323a7b0afa99d2710c4584bbdd",
     "/assets/images/ynet.png": "69155300e78e146b9554f28f7d25b8f7d7eb740a",
-    "/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
-    "/index.html": "2667c9a29637cdaa5ae24afa74e6d061f3507ccf",
+    "/favicon.ico": "2830fb61f07bf96ab5bd8adb698b717d65754e1d",
+    "/index.html": "93aa11d55fc044cdf042ef91fdce6848f48f8d7c",
     "/main-es2015.b4f7dcbea0233bff4b10.js": "24d40662c4d5d3d268feb6169cf69f0c5982b885",
     "/main-es5.b4f7dcbea0233bff4b10.js": "a3cc6c2f1fed5eea7e6be1777eb6f5cb1c9325c3",
     "/polyfills-es2015.2987770fde9daa1d8a2e.js": "cf5cbfa9134716054fb479ab21362146cdf1f2ff",
